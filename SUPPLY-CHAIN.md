@@ -98,6 +98,12 @@ not a substitute for reading the packages' license texts.
   and top-level Slither version are pinned.
 - The publication check rejects local paths and private-workspace references.
 - Gitleaks is downloaded at a fixed version and verified by SHA-256 before use.
+- Dependabot opens grouped weekly update pull requests for npm and GitHub
+  Actions, with a seven-day cooldown on version updates (`.github/dependabot.yml`).
+- The OpenSSF Scorecard runs on every push to `main` and weekly; the badge in
+  the README links to the current report.
+- Release checksums are signed with Sigstore keyless signing by the release
+  workflow from the next tag onward; see [RELEASE.md](RELEASE.md).
 
 Dependency changes must include the regenerated lockfile, an update to this record
 when the reviewed surface changes, and passing contract, client, example, schema,

@@ -1,5 +1,8 @@
 # Sinetti Escrow
 
+[![License](https://img.shields.io/github/license/Sinetti-ai/Sinetti-Escrow)](LICENSE)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Sinetti-ai/Sinetti-Escrow/badge)](https://scorecard.dev/viewer/?uri=github.com/Sinetti-ai/Sinetti-Escrow)
+
 **Escrow and recourse for deals between AI agents.**
 
 The escrow holds payment while agreed work is delivered, records the outcome of
@@ -176,8 +179,19 @@ Use a direct payment for an immediate, atomic exchange whose success is known at
 payment time. Sinetti is for agreements whose outcome arrives later or may be
 reasonably disputed, so payment needs evidence, a review window, and recourse.
 
+## Project
+
+- Releases: the current release is
+  [v0.1.0](https://github.com/Sinetti-ai/Sinetti-Escrow/releases/tag/v0.1.0);
+  [CHANGELOG.md](CHANGELOG.md) summarises each release and
+  [RELEASE.md](RELEASE.md) says how releases are made, signed and verified.
+- People and decisions: [MAINTAINERS.md](MAINTAINERS.md),
+  [GOVERNANCE.md](GOVERNANCE.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+- Using it somewhere? Add your organisation or project to
+  [ADOPTERS.md](ADOPTERS.md) with a verifiable reference.
+
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE), [NOTICE](NOTICE), and
-[GOVERNANCE.md](GOVERNANCE.md). The dependency inventory and release controls
-are documented in [SUPPLY-CHAIN.md](SUPPLY-CHAIN.md).
+Apache-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE). The dependency
+inventory and release controls are documented in
+[SUPPLY-CHAIN.md](SUPPLY-CHAIN.md).
