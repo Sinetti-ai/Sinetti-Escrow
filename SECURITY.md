@@ -17,6 +17,11 @@ There are currently no supported versions.
 Security support and end-of-support information will be published with the first
 supported release.
 
+## Security contacts
+
+The maintainers listed in [MAINTAINERS.md](MAINTAINERS.md) form the security
+team and receive private reports.
+
 ## Reporting a vulnerability
 
 Use GitHub private vulnerability reporting from this repository's **Security**
