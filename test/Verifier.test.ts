@@ -165,6 +165,23 @@ describe("deterministic schema verifier", function () {
     });
   });
 
+  it("enforces the date-time format instead of treating it as always valid", async function () {
+    const artifact = JSON.parse(
+      await readFile(path.resolve("examples/delivery/customer-export.json"), "utf8")
+    );
+    for (const bad of ["not-a-date", "2026-02-30T00:00:00Z", "2026-01-14T24:00:00Z", "2026-01-14 10:30:00Z"]) {
+      expect(verifySchemaDelivery(await jobFor({ ...artifact, generated_at: bad })), bad).to.include({
+        result: "fail",
+        reason_code: "schema_invalid"
+      });
+    }
+    for (const good of ["2026-01-14T10:30:00Z", "2026-01-14T10:30:00.123+01:00", "2024-02-29T23:59:59-05:00"]) {
+      expect(verifySchemaDelivery(await jobFor({ ...artifact, generated_at: good })), good).to.include({
+        result: "pass"
+      });
+    }
+  });
+
   it("reports unavailable logs as inconclusive rather than seller failure", async function () {
     const artifact = JSON.parse(
       await readFile(path.resolve("examples/delivery/customer-export.json"), "utf8")
