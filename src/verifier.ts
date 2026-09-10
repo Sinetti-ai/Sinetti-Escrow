@@ -117,9 +117,9 @@ function result(
   };
 }
 
-// RFC 3339 date-time: full date, "T", time with optional fraction, then "Z" or an
-// hh:mm offset. The calendar round-trip rejects impossible days such as 2026-02-30,
-// which Date.parse alone accepts.
+// RFC 3339 date-time with a real calendar date. Date.parse alone accepts 2026-02-30,
+// so the date is round-tripped; leap seconds (:60) are rejected because JS Date cannot
+// represent them. See docs/verifier.md.
 const RFC3339_DATE_TIME =
   /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/i;
 
@@ -127,7 +127,8 @@ function isRfc3339DateTime(value: string): boolean {
   const match = RFC3339_DATE_TIME.exec(value);
   if (!match || !Number.isFinite(Date.parse(value))) return false;
   const [year, month, day, hour, minute, second] = match.slice(1, 7).map(Number);
-  const date = new Date(Date.UTC(year, month - 1, day));
+  const date = new Date(0);
+  date.setUTCFullYear(year, month - 1, day); // Date.UTC would remap years 0-99 to 1900-1999
   return (
     date.getUTCFullYear() === year &&
     date.getUTCMonth() === month - 1 &&
@@ -136,9 +137,6 @@ function isRfc3339DateTime(value: string): boolean {
   );
 }
 
-// `date-time` is the only JSON Schema `format` this verifier implements. Ajv runs in
-// strict mode, so a committed schema using any other `format` fails to compile and the
-// job is Inconclusive rather than silently accepted.
 function schemaValidator(schema: unknown) {
   const ajv = new Ajv2020({
     allErrors: true,
