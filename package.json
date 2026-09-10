@@ -7,10 +7,10 @@
   "homepage": "https://sinetti.ai",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sinetti-ai/Sinetti.git"
+    "url": "git+https://github.com/Sinetti-ai/Sinetti-Escrow.git"
   },
   "bugs": {
-    "url": "https://github.com/Sinetti-ai/Sinetti/issues"
+    "url": "https://github.com/Sinetti-ai/Sinetti-Escrow/issues"
   },
   "engines": {
     "node": ">=22 <23"

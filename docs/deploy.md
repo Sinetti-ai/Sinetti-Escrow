@@ -45,7 +45,9 @@ The script writes `deployments/sepolia.json` with both contract addresses,
 transaction hashes, block numbers, the constructor arguments used, the
 current commit hash, and a `verification` block with the exact `cast`
 commands to reproduce the on-chain checks. It never writes
-`DEPLOYER_PRIVATE_KEY` or any other private key to disk.
+`DEPLOYER_PRIVATE_KEY` or any other private key to disk. The `receipts` block
+in that file is maintained by hand after public lifecycle runs; the script
+rewrites the whole file, so carry the block over after a redeploy.
 
 To try the flow without spending testnet ETH, run
 `npm run deploy:local` instead, which points at Hardhat's in-process

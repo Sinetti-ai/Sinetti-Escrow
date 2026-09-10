@@ -46,5 +46,120 @@
       "arbitrator.escrow() == 0x73862690E12621b3BC5749281CE4b23fe4a1695c",
       "arbitrator.overrideWindow() == 86400, agentKey == 0xaF28506B7504cE611e52De21E8e6464aB09Dc007, officer == 0xa9D9129FF53c8D7C89380399016991A5d6b42dEE"
     ]
+  },
+  "receipts": {
+    "note": "Synthetic deals run on this escrow with a test token. Deals 1 and 2 named an earlier arbitrator instance (0xf11022Abcf5cF5c1177Eae01F630EeA51dB9d6b4) that was never called; deal 6 named the arbitrator above. Deals 3 to 5 were opened and challenged against the earlier instance during testing and are not receipts.",
+    "explorer": "https://sepolia.etherscan.io/tx/",
+    "deals": [
+      {
+        "dealId": 1,
+        "outcome": "completed lifecycle, accepted",
+        "transactions": [
+          {
+            "step": "opened",
+            "block": 11628649,
+            "txHash": "0xb5ced5b6283059592b827437bb4ba604f71c478ec2a7cc0bfca77c2f763f7b7a"
+          },
+          {
+            "step": "bond posted",
+            "block": 11628651,
+            "txHash": "0x687a1f2afb6d3a4562384ad191125650611f4ec602555363b56cc1cb7ce041d7"
+          },
+          {
+            "step": "delivery submitted",
+            "block": 11628653,
+            "txHash": "0xf34434ece18fee1a8618f29e429704b9e12222901966780731dbae39c0717b2d"
+          },
+          {
+            "step": "verification recorded",
+            "block": 11628654,
+            "txHash": "0x21bceeed12b6d81e49c5760dc34ac409cb6cb5c2823e791764ed5b2f5fda881b"
+          },
+          {
+            "step": "settled, accepted",
+            "block": 11628655,
+            "txHash": "0x0485dd736b4d306f3db8ee279ff03c1f7479ce099340cc8bc832948575b9ee86"
+          },
+          {
+            "step": "seller withdrew",
+            "block": 11628656,
+            "txHash": "0xde690555ba95a5db0e4663e6e81cba6b093b97f6eb8670f77dee7fe27ad6ef86"
+          }
+        ]
+      },
+      {
+        "dealId": 2,
+        "outcome": "timeout",
+        "transactions": [
+          {
+            "step": "opened",
+            "block": 11628665,
+            "txHash": "0xbb5f573a7693d9aca9975cd63ceef3e5b5af7aaf77c1e1937674e5085132bf2e"
+          },
+          {
+            "step": "bond posted",
+            "block": 11628667,
+            "txHash": "0x93e4616562041192b1f0034714034371836807906cbf32868148ae148e29c430"
+          },
+          {
+            "step": "settled, timeout",
+            "block": 11628693,
+            "txHash": "0x4732aaf0fd7d7e305d0bcc364dce4b9e564bc75036de2f5394f950092cad9e9d"
+          },
+          {
+            "step": "buyer withdrew",
+            "block": 11628694,
+            "txHash": "0xbecca7287f7ddd31940feaee67c39f2b2afb02782848b9b87687b56598e0b60a"
+          },
+          {
+            "step": "seller withdrew",
+            "block": 11628695,
+            "txHash": "0x2fbb8d680f30ff142fbe795f65392a8321021c485ac82a05ac202dab6bb5190d"
+          }
+        ]
+      },
+      {
+        "dealId": 6,
+        "outcome": "dispute, officer ruled refund",
+        "transactions": [
+          {
+            "step": "opened",
+            "block": 11629822,
+            "txHash": "0xc4765f367f9d797796508d905b5269aaa38c35210c12d744f43a9e47ba5a5c83"
+          },
+          {
+            "step": "bond posted",
+            "block": 11629824,
+            "txHash": "0x573a5215b78197be27f41f3f591410dd39dce08f3547073c9aa29e2eae05b83b"
+          },
+          {
+            "step": "delivery submitted",
+            "block": 11629825,
+            "txHash": "0xd5c807e7c81c568c541f84cf8d098c8fffde9f595f3a1bd6ade1a2ddc6d74d07"
+          },
+          {
+            "step": "verification recorded",
+            "block": 11629827,
+            "txHash": "0xa17cbac18c152daa0168d729fea6dadb070cc901b4168ce35f93b4aee6a017cf"
+          },
+          {
+            "step": "challenged by the buyer",
+            "block": 11629829,
+            "txHash": "0x8d6233f0b4574a1b435dd158d91827c8a924ad7b1ecc2e3ac96fee8793dff8cb"
+          },
+          {
+            "step": "officer ruled refund; bond slashed; settled",
+            "block": 11630433,
+            "txHash": "0x1fd460a75682c3c54a586028a4c6486f665a00bd71947d424daa13fa520c3832"
+          },
+          {
+            "step": "buyer withdrew",
+            "block": 11630435,
+            "txHash": "0x99d79bf2e87a7de20ee73dcd0f6ab302a2444dafc0051582b13e7fb08e485de6"
+          }
+        ]
+      }
+    ],
+    "reproduce": "cast logs --from-block 11628623 --to-block 11630500 --address 0x73862690E12621b3BC5749281CE4b23fe4a1695c --rpc-url https://ethereum-sepolia-rpc.publicnode.com; cast logs --from-block 11629795 --to-block 11630500 --address 0x713D92780c3Ccb3416FCD50468C18ABB5449B8C7 --rpc-url https://ethereum-sepolia-rpc.publicnode.com"
   }
 }

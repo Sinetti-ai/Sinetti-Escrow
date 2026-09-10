@@ -1,12 +1,14 @@
-# Sinetti
+# Sinetti Escrow
 
-**Escrow and recourse for agent-to-agent service deals.**
+**Escrow and recourse for deals between AI agents.**
 
-Sinetti is a protocol for holding payment while agreed work is delivered,
-recording the outcome of verification, and resolving a challenged outcome before
-settlement.
+The escrow holds payment while agreed work is delivered, records the outcome of
+verification, and resolves a challenged outcome before settlement. The contract
+holds the funds; no operator can move them.
 
-Website: [sinetti.ai](https://sinetti.ai)
+This repository is the escrow and recourse component of Sinetti, an open
+protocol for trust between agents that have never met. The rest of Sinetti is at
+[sinetti.ai](https://sinetti.ai).
 
 ## What Sinetti adds
 
@@ -29,17 +31,45 @@ It is designed to compose with those systems.
 The V04 escrow, reference arbitrator, client, evidence modules, schemas, local
 examples, reference verifier, and arbitration-operator components are present.
 Reference contracts are deployed on the Sepolia testnet. Addresses, transaction
-hashes, constructor arguments and the commands to reproduce the on-chain checks
-are in [deployments/sepolia.json](deployments/sepolia.json):
+hashes, constructor arguments, receipts and the commands to reproduce the
+on-chain checks are in [deployments/sepolia.json](deployments/sepolia.json):
 
 | Contract | Address |
 | --- | --- |
-| `SinettiEscrowV04` | `0x73862690E12621b3BC5749281CE4b23fe4a1695c` |
-| `ConsoleArbitrator` | `0x713D92780c3Ccb3416FCD50468C18ABB5449B8C7` |
+| `SinettiEscrowV04` | [`0x73862690E12621b3BC5749281CE4b23fe4a1695c`](https://sepolia.etherscan.io/address/0x73862690E12621b3BC5749281CE4b23fe4a1695c) |
+| `ConsoleArbitrator` | [`0x713D92780c3Ccb3416FCD50468C18ABB5449B8C7`](https://sepolia.etherscan.io/address/0x713D92780c3Ccb3416FCD50468C18ABB5449B8C7) |
 
 The code is unaudited and the deployment is testnet only. Do not use it or any
 related deployment with real funds. See [SECURITY.md](SECURITY.md) and the
 [roadmap](ROADMAP.md).
+
+### Public receipts
+
+Three synthetic deals were run on the escrow above with a test token. Deals 1
+and 2 named an earlier arbitrator instance that was never called; deal 6 named
+the arbitrator above. The key transactions below are on Sepolia and can be
+checked without trusting this repository; the full sequences are in the
+deployment file. Deals 3 to 5 were opened and challenged against the earlier
+arbitrator instance during testing and are not receipts.
+
+| Deal | Step | Block | Transaction |
+| --- | --- | --- | --- |
+| 1, completed lifecycle | opened | 11628649 | [0xb5ce…7b7a](https://sepolia.etherscan.io/tx/0xb5ced5b6283059592b827437bb4ba604f71c478ec2a7cc0bfca77c2f763f7b7a) |
+| | verification recorded | 11628654 | [0x21bc…881b](https://sepolia.etherscan.io/tx/0x21bceeed12b6d81e49c5760dc34ac409cb6cb5c2823e791764ed5b2f5fda881b) |
+| | settled, accepted | 11628655 | [0x0485…ee86](https://sepolia.etherscan.io/tx/0x0485dd736b4d306f3db8ee279ff03c1f7479ce099340cc8bc832948575b9ee86) |
+| | seller withdrew | 11628656 | [0xde69…ef86](https://sepolia.etherscan.io/tx/0xde690555ba95a5db0e4663e6e81cba6b093b97f6eb8670f77dee7fe27ad6ef86) |
+| 2, timeout | opened | 11628665 | [0xbb5f…bf2e](https://sepolia.etherscan.io/tx/0xbb5f573a7693d9aca9975cd63ceef3e5b5af7aaf77c1e1937674e5085132bf2e) |
+| | settled, timeout | 11628693 | [0x4732…9e9d](https://sepolia.etherscan.io/tx/0x4732aaf0fd7d7e305d0bcc364dce4b9e564bc75036de2f5394f950092cad9e9d) |
+| | buyer withdrew | 11628694 | [0xbecc…b60a](https://sepolia.etherscan.io/tx/0xbecca7287f7ddd31940feaee67c39f2b2afb02782848b9b87687b56598e0b60a) |
+| | seller withdrew | 11628695 | [0x2fbb…190d](https://sepolia.etherscan.io/tx/0x2fbb8d680f30ff142fbe795f65392a8321021c485ac82a05ac202dab6bb5190d) |
+| 6, dispute | opened | 11629822 | [0xc476…5c83](https://sepolia.etherscan.io/tx/0xc4765f367f9d797796508d905b5269aaa38c35210c12d744f43a9e47ba5a5c83) |
+| | verification recorded | 11629827 | [0xa17c…17cf](https://sepolia.etherscan.io/tx/0xa17cbac18c152daa0168d729fea6dadb070cc901b4168ce35f93b4aee6a017cf) |
+| | challenged by the buyer | 11629829 | [0x8d62…f8cb](https://sepolia.etherscan.io/tx/0x8d6233f0b4574a1b435dd158d91827c8a924ad7b1ecc2e3ac96fee8793dff8cb) |
+| | officer ruled refund; bond slashed; settled | 11630433 | [0x1fd4…3832](https://sepolia.etherscan.io/tx/0x1fd460a75682c3c54a586028a4c6486f665a00bd71947d424daa13fa520c3832) |
+| | buyer withdrew | 11630435 | [0x99d7…5de6](https://sepolia.etherscan.io/tx/0x99d79bf2e87a7de20ee73dcd0f6ab302a2444dafc0051582b13e7fb08e485de6) |
+
+In deal 6 the arbitrator's agent key never landed a proposal inside its window,
+so the officer ruled directly. That path is the point of the officer role.
 
 ## Local quick start
 

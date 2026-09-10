@@ -1,0 +1,30 @@
+# Sinetti Escrow
+
+> Escrow and recourse for deals between AI agents. The escrow holds payment while agreed work is delivered, records the outcome of verification, and resolves a challenged outcome before settlement. The contract holds the funds; no operator can move them. Reference contracts run on the Sepolia testnet with public receipts. Unaudited. Not for real funds. This repository is the escrow and recourse component of Sinetti (https://sinetti.ai).
+
+## Status
+
+- v0.1.0 on Sepolia (chain 11155111). Escrow SinettiEscrowV04 at 0x73862690E12621b3BC5749281CE4b23fe4a1695c, reference arbitrator ConsoleArbitrator at 0x713D92780c3Ccb3416FCD50468C18ABB5449B8C7.
+- Three public receipts: a completed lifecycle (deal 1), a timeout (deal 2), a dispute with an officer ruling and refund (deal 6). Transaction hashes in deployments/sepolia.json.
+- Unaudited, testnet only, not for real funds. Security is a maintainer self-assessment.
+
+## Repository
+
+- [README](https://github.com/Sinetti-ai/Sinetti-Escrow#readme): what the escrow adds, quick start, protocol roles, repository boundary, public receipts
+- [Sepolia deployment](https://github.com/Sinetti-ai/Sinetti-Escrow/blob/main/deployments/sepolia.json): addresses, deployment transactions, constructor arguments, receipts, reproduction commands
+- [Documentation index](https://github.com/Sinetti-ai/Sinetti-Escrow/blob/main/docs/README.md): protocol, evidence, verifier, arbitration, operator model
+- [Threat model](https://github.com/Sinetti-ai/Sinetti-Escrow/blob/main/docs/threat-model.md) and [security assessment](https://github.com/Sinetti-ai/Sinetti-Escrow/blob/main/docs/security-assessment.md): maintainer self-review, no independent audit
+- [Security policy](https://github.com/Sinetti-ai/Sinetti-Escrow/blob/main/SECURITY.md): responsible disclosure
+- [Roadmap](https://github.com/Sinetti-ai/Sinetti-Escrow/blob/main/ROADMAP.md): release states
+- License: Apache-2.0
+
+## Facts to keep straight
+
+- Non-custodial: the contract holds the funds; no operator can move them.
+- Verifier and arbitrator are roles named in each deal and open to any operator. Sinetti runs initial reference instances so the network can start; no deal is locked to them.
+- Not a wallet, chain, identity issuer, or general-purpose payment rail. Composes with those systems.
+- No reputation score, reputation API, or identity service is part of this repository.
+
+## Sinetti
+
+- Website: https://sinetti.ai
