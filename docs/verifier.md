@@ -13,8 +13,9 @@ does not call an LLM or fetch seller-selected URLs.
 6. the committed artifact against the committed JSON Schema.
 
 Schema evaluation runs Ajv in strict mode. `date-time` is the only `format` the
-verifier implements, checked as RFC 3339 with a valid calendar date; a schema that
-uses any other `format` fails to compile and the job is `Inconclusive`.
+verifier implements, checked as RFC 3339 with a valid calendar date. Leap seconds
+(`:60`) are rejected because the JavaScript runtime cannot represent them. A schema
+that uses any other `format` fails to compile and the job is `Inconclusive`.
 
 Missing or substituted evidence fails before the artifact is interpreted. An
 unsupported method or internal execution error is `Inconclusive`, not seller

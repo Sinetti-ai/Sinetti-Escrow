@@ -169,13 +169,13 @@ describe("deterministic schema verifier", function () {
     const artifact = JSON.parse(
       await readFile(path.resolve("examples/delivery/customer-export.json"), "utf8")
     );
-    for (const bad of ["not-a-date", "2026-02-30T00:00:00Z", "2026-01-14T24:00:00Z", "2026-01-14 10:30:00Z"]) {
+    for (const bad of ["not-a-date", "2026-02-30T00:00:00Z", "2026-01-14T24:00:00Z", "2026-01-14T23:59:60Z", "2026-01-14 10:30:00Z"]) {
       expect(verifySchemaDelivery(await jobFor({ ...artifact, generated_at: bad })), bad).to.include({
         result: "fail",
         reason_code: "schema_invalid"
       });
     }
-    for (const good of ["2026-01-14T10:30:00Z", "2026-01-14T10:30:00.123+01:00", "2024-02-29T23:59:59-05:00"]) {
+    for (const good of ["2026-01-14T10:30:00Z", "2026-01-14T10:30:00.123+01:00", "2024-02-29T23:59:59-05:00", "0050-06-15T00:00:00Z"]) {
       expect(verifySchemaDelivery(await jobFor({ ...artifact, generated_at: good })), good).to.include({
         result: "pass"
       });
