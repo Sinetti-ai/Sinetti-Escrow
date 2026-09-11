@@ -8,11 +8,11 @@ how maintainers are added, step back, and decide.
 
 | Name | GitHub | Organisation | Contact |
 | --- | --- | --- | --- |
-| Sinetti maintainers | [Sinetti-ai](https://github.com/Sinetti-ai) | Financial Network Analytics Ltd | team@sinetti.ai |
+| Ryan | [Sinetti-ai](https://github.com/Sinetti-ai) | Financial Network Analytics Ltd | team@sinetti.ai |
+| Kudakwashe Mutasa | [kmuz-dev](https://github.com/kmuz-dev) | Financial Network Analytics Ltd | kuda@sinetti.ai |
 
-The repository is owned by the `Sinetti-ai` GitHub account and commits so far
-carry sinetti.ai author addresses. Individual maintainers are listed here by
-name and GitHub handle as they take up the role.
+The repository is owned by the `Sinetti-ai` GitHub account. Project contact is
+team@sinetti.ai.
 
 ## Emeritus maintainers
 
