@@ -35,20 +35,20 @@
     "validate:schemas": "sh -c 'for s in schemas/*.schema.json; do n=$(basename $s .schema.json); npx ajv validate --spec=draft2020 --validate-formats=false -s $s -d schemas/examples/$n.example.json || exit 1; done; npx ajv validate --spec=draft2020 --validate-formats=false -s schemas/customer-export.schema.json -d examples/delivery/customer-export.json'"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "5.0.2"
+    "@openzeppelin/contracts": "5.6.1"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.2",
     "@types/chai": "^4.3.20",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.7.5",
+    "@types/node": "^26.4.1",
     "ajv": "8.20.0",
     "ajv-cli": "^5.0.0",
-    "chai": "^4.5.0",
+    "chai": "^6.2.2",
     "ethers": "^6.14.0",
-    "hardhat": "^2.28.6",
+    "hardhat": "^2.29.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "fast-uri": "3.1.7"
