@@ -66,6 +66,16 @@ The implementation and threat model must account for at least these boundaries:
   and anti-abuse controls require a deployment-specific review. Publishing the
   role logic does not make an instance production-safe.
 
+## Dependencies
+
+The only runtime dependency is `@openzeppelin/contracts`, pinned in
+`package.json`. Every other npm package is build and test tooling (hardhat and
+its plugins, mocha, chai, typechain, coverage). Dependabot alerts against that
+tooling do not reach the compiled contracts or anyone who deploys them. Maintainers
+triage them by hand. Clearing the current set needs hardhat 3 and
+hardhat-toolbox 7, a config and test-runner migration that is planned as its own
+change. A runtime dependency alert is handled as a security report.
+
 ## Claims and verification
 
 Security properties do not automatically transfer between implementations.
