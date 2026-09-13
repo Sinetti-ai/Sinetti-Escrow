@@ -9,7 +9,7 @@ how maintainers are added, step back, and decide.
 | Name | GitHub | Organisation | Contact |
 | --- | --- | --- | --- |
 | Ryan | [Sinetti-ai](https://github.com/Sinetti-ai) | Financial Network Analytics Ltd | team@sinetti.ai |
-| Kudakwashe Mutasa | [kmuz-dev](https://github.com/kmuz-dev) | Financial Network Analytics Ltd | kuda@sinetti.ai |
+| Kudakwashe | [kmuz-dev](https://github.com/kmuz-dev) | Financial Network Analytics Ltd | kuda@sinetti.ai |
 
 The repository is owned by the `Sinetti-ai` GitHub account. Project contact is
 team@sinetti.ai.
