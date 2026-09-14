@@ -24,7 +24,7 @@ import {
  * hashed here is the bytes of `examples/delivery/`, through the same module the
  * public tooling and `docs/evidence.md` check 1 use.
  */
-export const DELIVERY_DIR = path.join(__dirname, "delivery");
+export const DELIVERY_DIR = path.join(import.meta.dirname, "delivery");
 
 /** The run log, which is a delivered file and also the `logs_hash` source. */
 export const DELIVERY_LOG = path.join(DELIVERY_DIR, "export-run.txt");
@@ -41,7 +41,7 @@ export const DELIVERY_LOG = path.join(DELIVERY_DIR, "export-run.txt");
 export function repoCommitHash(): string {
   try {
     return execFileSync("git", ["rev-parse", "HEAD"], {
-      cwd: __dirname,
+      cwd: import.meta.dirname,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"]
     }).trim();
@@ -62,7 +62,7 @@ export function repoCommitHash(): string {
  * to the one fact about its runtime that is actually true and actually varies.
  */
 export function runtimeHash(): string {
-  return hashFile(path.resolve(__dirname, "../package-lock.json"));
+  return hashFile(path.resolve(import.meta.dirname, "../package-lock.json"));
 }
 
 export type ExampleDelivery = {

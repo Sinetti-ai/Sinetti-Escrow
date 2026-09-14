@@ -29,7 +29,7 @@ async function main(): Promise<void> {
   const casePath = process.argv[3];
   if (!action || !casePath) {
     throw new Error(
-      "Usage: ts-node scripts/arbitrate.ts <propose|officer-calldata|overturn|push> <case.json>"
+      "Usage: npm run arbitrator -- <propose|officer-calldata|overturn|push> <case.json>"
     );
   }
   const caseFile = JSON.parse(readFileSync(casePath, "utf8")) as ArbitrationCase;

@@ -5,7 +5,7 @@ import { join } from "node:path";
 
 import { expect } from "chai";
 import { Contract } from "ethers";
-import { ethers } from "hardhat";
+import { ethers } from "./helpers/hardhat";
 
 import {
   assertCommittedOnChain,
@@ -21,7 +21,7 @@ import {
   type EvidenceHashOptions
 } from "../scripts/evidence-hash";
 
-const EXAMPLES = join(__dirname, "..", "examples");
+const EXAMPLES = join(import.meta.dirname, "..", "examples");
 const DELIVERY = join(EXAMPLES, "delivery");
 
 function requiredArgs(deliverable: string): string[] {

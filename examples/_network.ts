@@ -1,4 +1,4 @@
-import hre from "hardhat";
+import { ethers, networkName } from "./_hardhat";
 import type { Signer } from "ethers";
 
 /**
@@ -26,10 +26,10 @@ function requiredEnv(name: string): string {
 
 export function envAddress(name: string): string {
   const value = requiredEnv(name);
-  if (!hre.ethers.isAddress(value)) {
+  if (!ethers.isAddress(value)) {
     throw new Error(`${name} (${value}) is not a valid EVM address.`);
   }
-  return hre.ethers.getAddress(value);
+  return ethers.getAddress(value);
 }
 
 /**
@@ -43,14 +43,14 @@ export function walletFromEnv(name: string): Signer {
   if (!/^0x[0-9a-fA-F]{64}$/.test(key)) {
     throw new Error(`${name} is not a 32-byte hex private key. The value is not shown.`);
   }
-  return new hre.ethers.Wallet(key, hre.ethers.provider);
+  return new ethers.Wallet(key, ethers.provider);
 }
 
 const POLL_INTERVAL_MS = 5_000;
 const PROGRESS_INTERVAL_S = 30;
 // ponytail: a flat gas floor, not a real estimate. Bump if a network's gas
 // price makes 0.01 native currency too tight for the transactions below.
-const MIN_NATIVE_FOR_GAS = hre.ethers.parseEther(process.env.SINETTI_MIN_NATIVE ?? "0.002");
+const MIN_NATIVE_FOR_GAS = ethers.parseEther(process.env.SINETTI_MIN_NATIVE ?? "0.002");
 
 export { MIN_NATIVE_FOR_GAS };
 
@@ -70,7 +70,7 @@ export async function waitUntilTimestamp(target: bigint, label: string): Promise
   const startedAt = Date.now();
   let lastPrintedAt = -Infinity;
   for (;;) {
-    const block = await hre.ethers.provider.getBlock("latest");
+    const block = await ethers.provider.getBlock("latest");
     if (!block) throw new Error("cannot read the chain head while waiting");
     const now = BigInt(block.timestamp);
     if (now >= target) return;
@@ -105,11 +105,11 @@ export type BalanceCheck = {
 export async function requireFunded(checks: BalanceCheck[]): Promise<void> {
   const shortfalls: string[] = [];
   for (const check of checks) {
-    const native = await hre.ethers.provider.getBalance(check.address);
+    const native = await ethers.provider.getBalance(check.address);
     if (native < MIN_NATIVE_FOR_GAS) {
       shortfalls.push(
-        `${check.label} (${check.address}) has ${hre.ethers.formatEther(native)} native currency, ` +
-          `needs at least ${hre.ethers.formatEther(MIN_NATIVE_FOR_GAS)} for gas`
+        `${check.label} (${check.address}) has ${ethers.formatEther(native)} native currency, ` +
+          `needs at least ${ethers.formatEther(MIN_NATIVE_FOR_GAS)} for gas`
       );
     }
     const tokenBalance = await check.token.balanceOf(check.address);

@@ -69,7 +69,7 @@ export type SchemaVerificationJob = {
 };
 
 function repositoryRoot(): string {
-  let cursor = path.resolve(__dirname);
+  let cursor = path.resolve(import.meta.dirname);
   while (true) {
     const manifest = path.join(cursor, "package.json");
     if (existsSync(manifest)) {
@@ -165,10 +165,10 @@ export function verifySchemaDelivery(job: SchemaVerificationJob): VerificationRe
     const repoRoot = repositoryRoot();
 
     const criteriaSchema = JSON.parse(
-      readFileSync(path.resolve(__dirname, "../schemas/acceptance-criteria.schema.json"), "utf8")
+      readFileSync(path.resolve(import.meta.dirname, "../schemas/acceptance-criteria.schema.json"), "utf8")
     );
     const envelopeSchema = JSON.parse(
-      readFileSync(path.resolve(__dirname, "../schemas/evidence-envelope.schema.json"), "utf8")
+      readFileSync(path.resolve(import.meta.dirname, "../schemas/evidence-envelope.schema.json"), "utf8")
     );
     if (!schemaValidator(criteriaSchema)(job.criteria) || !schemaValidator(envelopeSchema)(job.envelope)) {
       return result(job, "fail", "schema_invalid");

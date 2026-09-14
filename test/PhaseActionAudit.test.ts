@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Contract, Signer } from "ethers";
-import { ethers } from "hardhat";
-import { loadFixture, takeSnapshot, time } from "@nomicfoundation/hardhat-network-helpers";
+import { ethers } from "./helpers/hardhat";
+import { loadFixture, takeSnapshot, time } from "./helpers/hardhat";
 
 import { OUTCOME, STATE, VERDICT, openDeal, postBond, stateName } from "../src/dealClient";
 import { assertActionAllowed, challengeVerdict } from "../src/dealLifecycle";

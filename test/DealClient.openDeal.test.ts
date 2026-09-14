@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Contract, FunctionFragment } from "ethers";
-import { artifacts, ethers } from "hardhat";
-import { time } from "@nomicfoundation/hardhat-network-helpers";
+import { artifacts, ethers } from "./helpers/hardhat";
+import { time } from "./helpers/hardhat";
 
 import { ERC20_ABI, ESCROW_ABI, STATE, openDeal, postBond } from "../src/dealClient";
 import { signSellerAcceptance } from "../src/sellerAcceptance";

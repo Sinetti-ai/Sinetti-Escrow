@@ -13,16 +13,16 @@
     "url": "https://github.com/Sinetti-ai/Sinetti-Escrow/issues"
   },
   "engines": {
-    "node": ">=22 <23"
+    "node": ">=22.13 <23"
   },
   "scripts": {
     "build": "hardhat compile",
     "test": "npm run test:forge && npm run test:hardhat",
     "test:forge": "bash scripts/forge.sh test",
-    "test:hardhat": "hardhat test",
-    "evidence:hash": "ts-node scripts/evidence-hash.ts",
-    "verifier": "ts-node scripts/verify.ts",
-    "arbitrator": "ts-node scripts/arbitrate.ts",
+    "test:hardhat": "hardhat test mocha",
+    "evidence:hash": "tsx scripts/evidence-hash.ts",
+    "verifier": "tsx scripts/verify.ts",
+    "arbitrator": "tsx scripts/arbitrate.ts",
     "check:dependencies": "node scripts/check-dependencies.mjs",
     "check:publication": "node scripts/check-publication.mjs",
     "audit:dependencies": "npm audit --package-lock-only --omit=dev --audit-level=high",
@@ -30,27 +30,30 @@
     "example:dispute": "hardhat run examples/dispute.ts",
     "example:timeout": "hardhat run examples/timeout-refund.ts",
     "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia",
-    "deploy:local": "hardhat run scripts/deploy.ts --network hardhat",
+    "deploy:local": "hardhat run scripts/deploy.ts --network default",
     "typecheck": "tsc --noEmit -p tsconfig.examples.json",
-    "validate:schemas": "sh -c 'for s in schemas/*.schema.json; do n=$(basename $s .schema.json); npx ajv validate --spec=draft2020 --validate-formats=false -s $s -d schemas/examples/$n.example.json || exit 1; done; npx ajv validate --spec=draft2020 --validate-formats=false -s schemas/customer-export.schema.json -d examples/delivery/customer-export.json'"
+    "validate:schemas": "node scripts/validate-schemas.mjs"
   },
   "dependencies": {
     "@openzeppelin/contracts": "5.0.2"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^6.1.2",
-    "@types/chai": "^4.3.20",
+    "@nomicfoundation/hardhat-ethers": "^4.0.15",
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^3.0.7",
+    "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.7.5",
     "ajv": "8.20.0",
-    "ajv-cli": "^5.0.0",
-    "chai": "^4.5.0",
+    "chai": "^6.2.2",
     "ethers": "^6.14.0",
-    "hardhat": "^2.28.6",
-    "ts-node": "^10.9.2",
+    "hardhat": "^3.16.0",
+    "mocha": "^11.8.0",
+    "tsx": "^4.23.13",
     "typescript": "^5.9.3"
   },
   "overrides": {
-    "fast-uri": "3.1.7"
-  }
+    "fast-uri": "3.1.7",
+    "serialize-javascript": "7.1.1"
+  },
+  "type": "module"
 }

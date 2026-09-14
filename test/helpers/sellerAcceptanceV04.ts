@@ -5,7 +5,7 @@ import type {
   Signer,
   TypedDataField
 } from "ethers";
-import { ethers } from "hardhat";
+import { ethers } from "./hardhat";
 
 let benchmarkSaltSequence = 0n;
 

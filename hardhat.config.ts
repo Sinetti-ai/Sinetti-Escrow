@@ -1,12 +1,13 @@
-import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
+import hardhatToolboxMochaEthers from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
+import { defineConfig } from "hardhat/config";
 
 // No .env loader here: dotenv is not a dependency of this repo. Export
 // variables to the shell before running (`set -a; source .env; set +a`),
 // see docs/deploy.md.
 const deployerPrivateKey = process.env.DEPLOYER_PRIVATE_KEY?.trim();
 
-const config: HardhatUserConfig = {
+export default defineConfig({
+  plugins: [hardhatToolboxMochaEthers],
   solidity: {
     version: "0.8.26",
     settings: {
@@ -15,25 +16,37 @@ const config: HardhatUserConfig = {
         runs: 200
       },
       evmVersion: "berlin"
-    }
+    },
+    npmFilesToBuild: ["@openzeppelin/contracts/token/ERC20/IERC20.sol"]
   },
   networks: {
-    hardhat: {},
+    default: {
+      type: "edr-simulated",
+      chainType: "l1"
+    },
     sepolia: {
+      type: "http",
+      chainType: "l1",
       url: process.env.SEPOLIA_RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com",
       accounts: deployerPrivateKey ? [deployerPrivateKey] : [],
       chainId: 11155111
     }
   },
-  // hardhat-toolbox already bundles @nomicfoundation/hardhat-verify; no new
-  // dependency needed for Etherscan verification.
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY || ""
+  // The toolbox bundles @nomicfoundation/hardhat-verify; no new dependency
+  // needed for Etherscan verification.
+  verify: {
+    etherscan: {
+      apiKey: process.env.ETHERSCAN_API_KEY || ""
+    }
   },
   typechain: {
-    outDir: "typechain-types",
-    target: "ethers-v6"
+    outDir: "typechain-types"
+  },
+  // Solidity tests live in Foundry (test/foundry, run by forge). Point Hardhat 3's
+  // Solidity test runner elsewhere so `hardhat compile` skips them.
+  paths: {
+    tests: {
+      solidity: "test/solidity"
+    }
   }
-};
-
-export default config;
+});

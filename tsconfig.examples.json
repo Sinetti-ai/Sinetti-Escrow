@@ -3,7 +3,7 @@
   "include": [
     "./hardhat.config.ts",
     "./examples/**/*.ts",
-    "./scripts/deploy.ts",
+    "./scripts/**/*.ts",
     "./src/**/*.ts",
     "./typechain-types/**/*.ts"
   ]

@@ -1,4 +1,4 @@
-import hre from "hardhat";
+import { ethers, networkName } from "./_hardhat";
 
 import { envAddress, walletFromEnv } from "./_network";
 
@@ -28,8 +28,8 @@ async function main(): Promise<void> {
   const officer = walletFromEnv("ARBITRATOR_OFFICER_PRIVATE_KEY");
   const winner = walletFromEnv(outcome === OUTCOMES.refund ? "BUYER_PRIVATE_KEY" : "SELLER_PRIVATE_KEY");
 
-  const escrow = await hre.ethers.getContractAt("SinettiEscrowV04", escrowAddress);
-  const arbitrator = await hre.ethers.getContractAt("ConsoleArbitrator", arbitratorAddress);
+  const escrow = await ethers.getContractAt("SinettiEscrowV04", escrowAddress);
+  const arbitrator = await ethers.getContractAt("ConsoleArbitrator", arbitratorAddress);
 
   const before = await escrow.getDeal(dealId);
   if (before.state !== STATE.Disputed) throw new Error(`deal ${dealId} is in state ${before.state}, not Disputed.`);
