@@ -1,4 +1,4 @@
-import hre from "hardhat";
+import { ethers, networkName } from "./_hardhat";
 
 import { assertCommittedOnChain, describeDelivery, exampleDelivery } from "./_evidence";
 import {
@@ -70,7 +70,7 @@ async function main(): Promise<void> {
   assertEqual(escrowBalanceAfter - escrowBalanceBefore, 0n, "escrow balance change");
 
   const unit = context.attached ? "token base units" : "tEUR";
-  const displayAmount = context.attached ? amount.toString() : hre.ethers.formatUnits(amount, 6);
+  const displayAmount = context.attached ? amount.toString() : ethers.formatUnits(amount, 6);
   console.log(`\nSUCCESS: deal #${dealId} paid ${displayAmount} ${unit} to seller after withdrawal; bond withdrawn.`);
 }
 

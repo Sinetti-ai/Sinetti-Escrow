@@ -144,3 +144,23 @@ jobs:
           tar -xzf gitleaks.tar.gz gitleaks
           sudo install -m 0755 gitleaks /usr/local/bin/gitleaks
       - run: gitleaks git --redact --verbose
+
+  # The branch rule on main requires one check named `test`. This job carries
+  # that name and fails when any job above failed, was cancelled or was skipped.
+  test:
+    if: always()
+    needs:
+      - dependencies
+      - hardhat
+      - foundry
+      - examples
+      - types-and-schemas
+      - static-analysis
+      - source-hygiene
+      - secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every job to have succeeded
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')
+        run: exit 1
+      - run: echo "all CI jobs succeeded"

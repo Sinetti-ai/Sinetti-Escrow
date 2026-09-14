@@ -69,12 +69,10 @@ The implementation and threat model must account for at least these boundaries:
 ## Dependencies
 
 The only runtime dependency is `@openzeppelin/contracts`, pinned in
-`package.json`. Every other npm package is build and test tooling (hardhat and
-its plugins, mocha, chai, typechain, coverage). Dependabot alerts against that
-tooling do not reach the compiled contracts or anyone who deploys them. Maintainers
-triage them by hand. Clearing the current set needs hardhat 3 and
-hardhat-toolbox 7, a config and test-runner migration that is planned as its own
-change. A runtime dependency alert is handled as a security report.
+`package.json`. Every other npm package is build and test tooling (Hardhat 3 and
+its plugins, mocha, chai, typechain, tsx). Dependabot alerts against that tooling
+do not reach the compiled contracts or anyone who deploys them. Maintainers triage
+them by hand; the open set is recorded in SUPPLY-CHAIN.md. A runtime dependency alert is handled as a security report.
 
 ## Claims and verification
 

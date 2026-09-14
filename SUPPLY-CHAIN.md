@@ -3,7 +3,9 @@
 This repository keeps its dependency surface reviewable and treats dependency
 changes as release changes. This review covers the initial public-release tree
 and includes the advisory remediation described below; it was performed on 2
-September 2026. Before publication, the same checks must run against the exact
+September 2026, and the toolchain was reviewed again on 13 September 2026 after the
+move to Hardhat 3; the counts below describe that second tree. Before
+publication, the same checks must run against the exact
 commit being published. This is evidence about one reviewed tree, not a claim
 that future installs are safe.
 
@@ -18,7 +20,7 @@ The contract source has one direct runtime dependency:
 The manifest classifies the JavaScript and TypeScript toolchain as
 `devDependencies` because the package is private and is not published to npm.
 That label does not mean the entire tree is test-only: Ethers, Ajv,
-TypeScript/`ts-node`, and their transitives are executed when an operator runs
+TypeScript/`tsx`, and their transitives are executed when an operator runs
 the reference verifier or arbitration commands. Hardhat, its toolbox, Chai, and
 the type packages support compilation and testing.
 
@@ -26,19 +28,18 @@ The supported runtime is Node 22, and the direct `@types/node` development
 dependency is aligned to that major version. Some tools may retain their own
 nested Node type version according to their published dependency ranges.
 
-The current lockfile contains 579 package entries. Every resolved tarball has an
+The current lockfile contains 292 package entries. Every resolved tarball has an
 integrity hash and every resolved source uses `https://registry.npmjs.org/`; there
 are no Git, file, or arbitrary URL package sources.
 
 ## Installation scripts
 
-Three locked transitive packages declare installation scripts:
+Two locked transitive packages declare installation scripts:
 
 | Package | Version | Why present |
 |---|---:|---|
+| `esbuild` | `0.28.2` | Native binary behind `tsx`, the TypeScript loader used by Hardhat 3 and the operator scripts |
 | `fsevents` | `2.3.3` | Optional filesystem events support on macOS |
-| `keccak` | `3.0.4` | Native hashing dependency in the Ethereum toolchain |
-| `secp256k1` | `4.0.4` | Native elliptic-curve dependency in the Ethereum toolchain |
 
 `scripts/check-dependencies.mjs` pins this allowlist by package and version. A new
 or changed installation script fails CI until it is reviewed here.
@@ -55,6 +56,15 @@ on the exact release commit before publication.
 - [GHSA-qw65-cvwx-89v3](https://github.com/fastify/fast-uri/security/advisories/GHSA-qw65-cvwx-89v3)
 - [GHSA-58mr-gqgx-xq4g](https://github.com/fastify/fast-uri/security/advisories/GHSA-58mr-gqgx-xq4g)
 
+Mocha 11 depends on `serialize-javascript@6`, which sits inside the ranges of a
+high-severity code execution advisory and a moderate CPU exhaustion advisory.
+The manifest overrides it to `serialize-javascript@7.1.1`, the version Mocha 12
+adopted; Hardhat's Mocha plugin still declares Mocha 11 as its peer, so the
+override is the narrower change. The lockfile policy pins the repaired version.
+
+- [GHSA-5c6j-r48x-rmvq](https://github.com/advisories/GHSA-5c6j-r48x-rmvq)
+- [GHSA-qj8w-gfj5-8c6v](https://github.com/advisories/GHSA-qj8w-gfj5-8c6v)
+
 The blocking CI advisory gate runs
 `npm audit --package-lock-only --omit=dev --audit-level=high`. It covers the
 runtime dependency shipped with the contract source. The lockfile policy still
@@ -62,23 +72,21 @@ checks every development package's source, integrity hash, and installation
 scripts, but a clean runtime audit must not be read as a clean audit of the
 development toolchain.
 
-The full-lockfile audit on 3 September 2026 reported 40 development-toolchain
-findings (13 low, 7 moderate, and 20 high), principally through Hardhat 2 and
-its toolbox, plus `ajv-cli`. npm's blanket remediation would install Hardhat 3
-and toolbox 7, which are breaking upgrades. The release does not conceal that
-residual exposure behind an exception list or an unreviewed `npm audit fix
---force`: operators should treat the JavaScript toolchain as untrusted build
-input, use it only with synthetic data and development keys, and review the
-open GitHub dependency alerts before changing or redistributing it. Migrating
-or reducing that toolchain is follow-up security work; it is not evidence that
-the contract source is safe.
+The full-lockfile audit on 13 September 2026, after the move to Hardhat 3,
+reports 13 development-toolchain findings, all low severity: the `@ethersproject`
+v5 packages and `elliptic` that `hardhat-verify` still pulls in, and `diff` under
+Mocha. The 40 findings through Hardhat 2, its toolbox and `ajv-cli` left with
+those packages. Operators should still treat the JavaScript toolchain as
+untrusted build input, use it only with synthetic data and development keys, and
+review the open GitHub dependency alerts before changing or redistributing it. A
+nearly clean toolchain audit is not evidence that the contract source is safe.
 
 ## License review
 
 Lockfile metadata is predominantly MIT, ISC, BSD, Apache-2.0, and similarly
-permissive licensing. The metadata also contains one LGPL-3.0 package
-(`web3-utils@1.10.4`), one Python-2.0 package (`argparse@2.0.1`), and seven
-packages with no license field in the lockfile. The manifest labels these as
+permissive licensing. The metadata also contains four BlueOak-1.0.0
+packages, one Python-2.0 package (`argparse@2.0.1`), and one package with no
+license field in the lockfile (`@nomicfoundation/ignition-ui`). The manifest labels these as
 development dependencies, but that classification does not by itself establish
 whether a package is executed by an operator or distributed in a particular
 artifact. Upstream license files require review before packaging or

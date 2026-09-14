@@ -19,14 +19,6 @@ updates:
       npm-security:
         applies-to: security-updates
         patterns: ["*"]
-    # hardhat 3 and toolbox 7 change the config format and test runner. That
-    # migration is a planned change, tracked in SECURITY.md under Dependencies,
-    # and does not arrive as a weekly bump.
-    ignore:
-      - dependency-name: hardhat
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@nomicfoundation/hardhat-toolbox"
-        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:

@@ -242,7 +242,7 @@ export function writeStatement(out: string, statement: DeliveryStatement): void 
   writeFileSync(out, canonicalJson(statement));
 }
 
-if (require.main === module) {
+if (process.argv[1] && import.meta.filename === path.resolve(process.argv[1])) {
   try {
     const options = parseArgs(process.argv.slice(2));
     const built = buildFromOptions(options);

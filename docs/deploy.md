@@ -57,8 +57,8 @@ has bytecode, so a local dry run needs a real deployed token; the repo's
 
 ## Verifying source on Etherscan
 
-`hardhat.config.ts` already carries an `etherscan` block that reads
-`ETHERSCAN_API_KEY`, because `@nomicfoundation/hardhat-toolbox` bundles the
+`hardhat.config.ts` already carries a `verify.etherscan` block that reads
+`ETHERSCAN_API_KEY`, because `@nomicfoundation/hardhat-toolbox-mocha-ethers` bundles the
 Etherscan verify plugin; no extra dependency is needed for that path. This
 repo also builds with Foundry, and Foundry's own verifier is the more direct
 route since the contracts are compiled there too:

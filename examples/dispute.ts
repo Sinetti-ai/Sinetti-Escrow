@@ -1,4 +1,4 @@
-import hre from "hardhat";
+import { ethers, networkName } from "./_hardhat";
 
 import {
   assertCommittedOnChain,

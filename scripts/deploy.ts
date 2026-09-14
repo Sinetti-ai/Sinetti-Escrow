@@ -2,8 +2,11 @@ import { execSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import hre from "hardhat";
+import { network } from "hardhat";
 import type { HardhatEthersHelpers } from "@nomicfoundation/hardhat-ethers/types";
+
+const connection = await network.create();
+const { ethers } = connection;
 
 /**
  * Deploys SinettiEscrowV04 and, pointed at it, ConsoleArbitrator.
@@ -26,10 +29,10 @@ const MAX_RULING_WINDOW = 90n * 86_400n;
 const MIN_OVERRIDE_WINDOW = 1n * 86_400n;
 const MAX_OVERRIDE_WINDOW = 30n * 86_400n;
 
-const LOCAL_NETWORKS = new Set(["hardhat", "localhost"]);
+const LOCAL_NETWORKS = new Set(["default", "localhost"]);
 
 type DeployRuntime = {
-  network: { name: string };
+  networkName: string;
   ethers: Pick<HardhatEthersHelpers, "getContractFactory" | "getSigners" | "provider">;
 };
 
@@ -38,10 +41,10 @@ function requiredAddress(env: NodeJS.ProcessEnv, name: string): string {
   if (!configured) {
     throw new Error(`${name} is required. Set it to a valid non-zero EVM address.`);
   }
-  if (!hre.ethers.isAddress(configured) || configured === hre.ethers.ZeroAddress) {
+  if (!ethers.isAddress(configured) || configured === ethers.ZeroAddress) {
     throw new Error(`${name} must be a valid non-zero EVM address.`);
   }
-  return hre.ethers.getAddress(configured);
+  return ethers.getAddress(configured);
 }
 
 function addressAllowlist(env: NodeJS.ProcessEnv, name: string): string[] {
@@ -49,10 +52,10 @@ function addressAllowlist(env: NodeJS.ProcessEnv, name: string): string[] {
   if (!configured) return [];
   const addresses = configured.split(",").map((value, index) => {
     const candidate = value.trim();
-    if (!candidate || !hre.ethers.isAddress(candidate) || candidate === hre.ethers.ZeroAddress) {
+    if (!candidate || !ethers.isAddress(candidate) || candidate === ethers.ZeroAddress) {
       throw new Error(`${name} entry ${index + 1} must be a valid non-zero EVM address.`);
     }
-    return hre.ethers.getAddress(candidate);
+    return ethers.getAddress(candidate);
   });
   const duplicate = addresses.find(
     (address, index) => addresses.indexOf(address) !== index
@@ -203,15 +206,15 @@ function pauserAddress(env: NodeJS.ProcessEnv, networkName: string, deployerAddr
     if (LOCAL_NETWORKS.has(networkName)) return deployerAddress;
     throw new Error("PAUSER_ADDRESS is required on non-local networks. Set it explicitly to a valid non-zero EVM address.");
   }
-  if (!hre.ethers.isAddress(configured) || configured === hre.ethers.ZeroAddress) {
+  if (!ethers.isAddress(configured) || configured === ethers.ZeroAddress) {
     throw new Error("PAUSER_ADDRESS must be a valid non-zero EVM address.");
   }
-  return hre.ethers.getAddress(configured);
+  return ethers.getAddress(configured);
 }
 
 function commitHash(): string {
   try {
-    return execSync("git rev-parse HEAD", { cwd: __dirname, encoding: "utf8" }).trim();
+    return execSync("git rev-parse HEAD", { cwd: import.meta.dirname, encoding: "utf8" }).trim();
   } catch {
     return "unknown";
   }
@@ -237,19 +240,19 @@ async function deployContract(
 }
 
 export async function main(
-  runtime: DeployRuntime = hre as typeof hre & { ethers: HardhatEthersHelpers },
+  runtime: DeployRuntime = connection,
   deploymentsDir = path.join(process.cwd(), "deployments")
 ): Promise<void> {
-  const networkName = runtime.network.name;
+  const networkName = runtime.networkName;
   const env = process.env;
 
   if (!LOCAL_NETWORKS.has(networkName) && !env.DEPLOYER_PRIVATE_KEY) {
-    throw new Error("DEPLOYER_PRIVATE_KEY is required off hardhat/localhost. Set it in .env before running this deploy.");
+    throw new Error("DEPLOYER_PRIVATE_KEY is required off the local networks (default, localhost). Set it in .env before running this deploy.");
   }
 
   const tokenAddress = requiredAddress(env, "TOKEN_ADDRESS");
-  const maxAmount = optionalUint(env, "TOKEN_MAX_AMOUNT", hre.ethers.MaxUint256);
-  const maxBond = optionalUint(env, "TOKEN_MAX_BOND", hre.ethers.MaxUint256);
+  const maxAmount = optionalUint(env, "TOKEN_MAX_AMOUNT", ethers.MaxUint256);
+  const maxBond = optionalUint(env, "TOKEN_MAX_BOND", ethers.MaxUint256);
   const minBondBps = requiredBps(env, "TOKEN_MIN_BOND_BPS");
   const minChallengerBondBps = requiredBps(env, "TOKEN_MIN_CHALLENGER_BOND_BPS");
   const minChallengeWindow = requiredUint(env, "MIN_CHALLENGE_WINDOW_SECONDS");
@@ -372,9 +375,7 @@ export async function main(
   );
 }
 
-if (require.main === module) {
-  main().catch((error: Error) => {
-    console.error(error.message);
-    process.exitCode = 1;
-  });
-}
+main().catch((error: Error) => {
+  console.error(error.message);
+  process.exitCode = 1;
+});

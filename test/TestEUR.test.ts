@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers } from "./helpers/hardhat";
 
 describe("TestEUR", () => {
   it("has euro test-token metadata and 6 decimals", async () => {

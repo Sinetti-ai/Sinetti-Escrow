@@ -9,13 +9,17 @@ const requiredPackages = new Map([
     version: "3.1.7",
     resolved: "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.7.tgz",
     integrity: "sha512-dOvZVzjdZdz7phd9v6jCbwxrBW3fK6n8Rc0CtdmM4bumzMnxywBYhuph6J819RRw/ku+rLbelwfMunktuzVVHg=="
+  }],
+  ["node_modules/serialize-javascript", {
+    version: "7.1.1",
+    resolved: "https://registry.npmjs.org/serialize-javascript/-/serialize-javascript-7.1.1.tgz",
+    integrity: "sha512-k3CMsaIvvdSwm8oLB4MXSl0wH2/cwlH7xGcnRd2DaeRmBkbzYmyT8j0tsX60DwD1eRwHTpNpH8ljKu9oUT1MeQ=="
   }]
 ]);
 
 const allowedInstallScripts = new Set([
-  "node_modules/fsevents@2.3.3",
-  "node_modules/keccak@3.0.4",
-  "node_modules/secp256k1@4.0.4"
+  "node_modules/esbuild@0.28.2",
+  "node_modules/fsevents@2.3.3"
 ]);
 
 for (const [name, metadata] of packages) {

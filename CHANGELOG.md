@@ -5,6 +5,12 @@ Git history and the GitHub release notes.
 
 ## Unreleased
 
+- Toolchain: Hardhat 3 with `@nomicfoundation/hardhat-toolbox-mocha-ethers`; the
+  project is an ES module, tests run on Mocha 11 and Chai 6, `tsx` replaces
+  `ts-node` for the operator scripts and a small script replaces `ajv-cli`.
+  Hardhat's own Solidity test runner is pointed away from `test/foundry`, which
+  forge keeps running. The full toolchain audit drops from 40 findings to 13,
+  all low. No contract change.
 - Arbitrator: `ConsoleArbitrator.rule()` lets the officer settle a dispute
   without waiting out the review window. Redeployed on Sepolia as
   `0x713D92780c3Ccb3416FCD50468C18ABB5449B8C7`; the escrow is unchanged. This

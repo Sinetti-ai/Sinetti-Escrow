@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Contract, Signer } from "ethers";
-import { ethers } from "hardhat";
-import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
+import { ethers } from "./helpers/hardhat";
+import { loadFixture, time } from "./helpers/hardhat";
 import {
   openDealWithSellerAcceptanceV04,
   DEFAULT_CHALLENGE_WINDOW,
@@ -154,7 +154,7 @@ describe("SinettiEscrowV04 dispute", function () {
       ).to.be.revertedWithCustomError(f.escrow, "NotSeller");
       const inconclusiveDeal = await openVerifiedDeal(f, VERDICT.Inconclusive);
       await expect(f.escrow.connect(f.seller).challenge(inconclusiveDeal)).to.not.be
-        .reverted;
+        .revert(ethers);
     });
 
     it("closes exactly at challengeEndsAt, and a reverted challenge writes no state", async function () {
@@ -194,7 +194,7 @@ describe("SinettiEscrowV04 dispute", function () {
       await f.mockUSDC
         .connect(f.buyer)
         .transfer(await f.other.getAddress(), await f.mockUSDC.balanceOf(f.buyer));
-      await expect(f.escrow.connect(f.buyer).challenge(dealId)).to.be.reverted;
+      await expect(f.escrow.connect(f.buyer).challenge(dealId)).to.be.revert(ethers);
       expect((await f.escrow.getDeal(dealId)).state).to.equal(STATE.Verified);
       // The deal still settles normally afterwards.
       await time.increase(DEFAULT_CHALLENGE_WINDOW + 1n);
@@ -502,11 +502,11 @@ describe("SinettiEscrowV04 dispute", function () {
         true,
         true
       );
-      await expect(escrow.connect(f.buyer).challenge(1n)).to.be.reverted;
+      await expect(escrow.connect(f.buyer).challenge(1n)).to.be.revert(ethers);
 
       // Disarmed, the same challenge lands cleanly.
       await malicious.disarm();
-      await expect(escrow.connect(f.buyer).challenge(1n)).to.not.be.reverted;
+      await expect(escrow.connect(f.buyer).challenge(1n)).to.not.be.revert(ethers);
     });
   });
 

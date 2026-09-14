@@ -1,4 +1,4 @@
-import { time } from "@nomicfoundation/hardhat-network-helpers";
+import { time } from "./_hardhat";
 
 import { assertEqual, fundAndOpen, exampleCriteria, postBond, resolveContext, send } from "./_local";
 import { attachedWindows, waitUntilTimestamp } from "./_network";

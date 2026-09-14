@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Contract, Signer } from "ethers";
-import { ethers } from "hardhat";
-import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
+import { ethers } from "./helpers/hardhat";
+import { loadFixture, time } from "./helpers/hardhat";
 import {
   openDealWithSellerAcceptanceV04,
   sellerAcceptanceV04,
@@ -411,7 +411,7 @@ describe("SinettiEscrowV04 lifecycle", function () {
       const f = await loadFixture(fixture);
       await expect(
         openDefaultDeal(f, undefined) // sanity: defaults open fine
-      ).to.not.be.reverted;
+      ).to.not.be.revert(ethers);
       await expect(
         openDealWithSellerAcceptanceV04(
           f.escrow, f.buyer, f.seller,
@@ -435,7 +435,7 @@ describe("SinettiEscrowV04 lifecycle", function () {
           await f.arbitratorStandIn.getAddress(), f.mockUSDC,
           AMOUNT, BOND, CHALLENGER_BOND, TERMS_HASH, 300n
         )
-      ).to.not.be.reverted;
+      ).to.not.be.revert(ethers);
     });
 
     it("bounds the challenger bond to (0, amount]", async function () {
@@ -463,7 +463,7 @@ describe("SinettiEscrowV04 lifecycle", function () {
           await f.arbitratorStandIn.getAddress(), f.mockUSDC,
           AMOUNT, BOND, AMOUNT, TERMS_HASH, DURATION
         )
-      ).to.not.be.reverted;
+      ).to.not.be.revert(ethers);
     });
 
     it("enforces the challenge-window floor of 60 and the ruling-window bounds", async function () {
@@ -471,14 +471,14 @@ describe("SinettiEscrowV04 lifecycle", function () {
       await expect(
         openDefaultDeal(f, { challengeWindow: 59n })
       ).to.be.revertedWithCustomError(f.escrow, "ChallengeWindowTooShort");
-      await expect(openDefaultDeal(f, { challengeWindow: 60n })).to.not.be.reverted;
+      await expect(openDefaultDeal(f, { challengeWindow: 60n })).to.not.be.revert(ethers);
       await expect(
         openDefaultDeal(f, { rulingWindow: 59n })
       ).to.be.revertedWithCustomError(f.escrow, "RulingWindowOutOfBounds");
       await expect(
         openDefaultDeal(f, { rulingWindow: 90n * 86400n + 1n })
       ).to.be.revertedWithCustomError(f.escrow, "RulingWindowOutOfBounds");
-      await expect(openDefaultDeal(f, { rulingWindow: 60n })).to.not.be.reverted;
+      await expect(openDefaultDeal(f, { rulingWindow: 60n })).to.not.be.revert(ethers);
     });
 
     it("rejects an EOA arbitrator: the judge must be a contract", async function () {

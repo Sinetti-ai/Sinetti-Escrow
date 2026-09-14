@@ -4,7 +4,7 @@ import type {
   LogDescription,
   Signer
 } from "ethers";
-import hre from "hardhat";
+import { ethers, networkName } from "./_hardhat";
 import path from "node:path";
 import { canonicalJson, hashFile } from "../src/evidenceManifest";
 import { signSellerAcceptance } from "../src/sellerAcceptance";
@@ -20,9 +20,9 @@ import type {
   TestEUR
 } from "../typechain-types";
 
-export const AMOUNT = hre.ethers.parseUnits("25", 6);
-export const BOND = hre.ethers.parseUnits("5", 6);
-export const CHALLENGER_BOND = hre.ethers.parseUnits("10", 6);
+export const AMOUNT = ethers.parseUnits("25", 6);
+export const BOND = ethers.parseUnits("5", 6);
+export const CHALLENGER_BOND = ethers.parseUnits("10", 6);
 
 export function exampleCriteria(): AcceptanceCriteria {
   return {
@@ -33,7 +33,7 @@ export function exampleCriteria(): AcceptanceCriteria {
     auto_release_threshold: "schema_valid",
     schema_or_test_ref: "schemas/customer-export.schema.json",
     artifact_path: "customer-export.json",
-    schema_hash: hashFile(path.resolve(__dirname, "../schemas/customer-export.schema.json")),
+    schema_hash: hashFile(path.resolve(import.meta.dirname, "../schemas/customer-export.schema.json")),
     repo_commit_hash: repoCommitHash(),
     runtime_hash: runtimeHash(),
     verifier_version: VERIFIER_VERSION,
@@ -74,14 +74,14 @@ function formatValue(context: LocalContext, name: string, type: string, value: u
   }
   if (type === "bytes32" && typeof value === "string") {
     try {
-      return `"${hre.ethers.decodeBytes32String(value)}"`;
+      return `"${ethers.decodeBytes32String(value)}"`;
     } catch {
       return value;
     }
   }
   if (typeof value === "bigint") {
     if (["amount", "bond", "challengerBond", "sellerCredit", "buyerCredit", "value"].includes(name)) {
-      return `${hre.ethers.formatUnits(value, 6)} tEUR`;
+      return `${ethers.formatUnits(value, 6)} tEUR`;
     }
     return value.toString();
   }
@@ -126,11 +126,11 @@ export async function send(
 }
 
 export async function deployLocal(): Promise<LocalContext> {
-  if (hre.network.name !== "hardhat") {
-    throw new Error(`Local examples only run on the in-process Hardhat network, not ${hre.network.name}`);
+  if (networkName !== "default") {
+    throw new Error(`Local examples only run on the in-process Hardhat network, not ${networkName}`);
   }
 
-  const [deployer, buyer, seller, verifier] = await hre.ethers.getSigners();
+  const [deployer, buyer, seller, verifier] = await ethers.getSigners();
   const [deployerAddress, buyerAddress, sellerAddress, verifierAddress] = await Promise.all([
     deployer.getAddress(),
     buyer.getAddress(),
@@ -138,13 +138,13 @@ export async function deployLocal(): Promise<LocalContext> {
     verifier.getAddress()
   ]);
 
-  const token = await (await hre.ethers.getContractFactory("TestEUR", deployer)).deploy();
+  const token = await (await ethers.getContractFactory("TestEUR", deployer)).deploy();
   await token.waitForDeployment();
   const arbitrator = await (
-    await hre.ethers.getContractFactory("MockManualArbitrator", deployer)
+    await ethers.getContractFactory("MockManualArbitrator", deployer)
   ).deploy();
   await arbitrator.waitForDeployment();
-  const escrow = await (await hre.ethers.getContractFactory("SinettiEscrowV04", deployer)).deploy(
+  const escrow = await (await ethers.getContractFactory("SinettiEscrowV04", deployer)).deploy(
     deployerAddress,
     [{
       token: await token.getAddress(),
@@ -219,12 +219,12 @@ export async function attachRemote(): Promise<LocalContext> {
     verifier.getAddress()
   ]);
 
-  const escrow = (await hre.ethers.getContractAt("SinettiEscrowV04", escrowAddress)) as SinettiEscrowV04;
-  const token = (await hre.ethers.getContractAt("IERC20", tokenAddress)) as unknown as IERC20;
+  const escrow = (await ethers.getContractAt("SinettiEscrowV04", escrowAddress)) as SinettiEscrowV04;
+  const token = (await ethers.getContractAt("IERC20", tokenAddress)) as unknown as IERC20;
   // Typed loosely: the deployed arbitrator may be ConsoleArbitrator or any other
   // IArbitratorV04 implementation. Callers that need ConsoleArbitrator-specific
   // methods (propose/overturn/push) attach it themselves with that address.
-  const arbitrator = (await hre.ethers.getContractAt(
+  const arbitrator = (await ethers.getContractAt(
     "ConsoleArbitrator",
     arbitratorAddress
   )) as ConsoleArbitrator;
@@ -267,7 +267,7 @@ export async function attachRemote(): Promise<LocalContext> {
   ]);
 
   console.log("SinettiEscrowV04 attached-mode lifecycle");
-  console.log(`Network: ${hre.network.name}`);
+  console.log(`Network: ${networkName}`);
   console.log(`Token: ${tokenAddress}`);
   console.log(`SinettiEscrowV04: ${escrowAddress}`);
   console.log(`Arbitrator: ${arbitratorAddress}`);
@@ -321,15 +321,15 @@ export async function fundAndOpen(
     context.token.connect(context.buyer).approve(context.escrowAddress, amount)
   );
 
-  const termsHash = hre.ethers.sha256(
-    hre.ethers.toUtf8Bytes(canonicalJson(criteria))
+  const termsHash = ethers.sha256(
+    ethers.toUtf8Bytes(canonicalJson(criteria))
   );
   const dealId = await context.escrow.nextDealId();
-  const latestBlock = await hre.ethers.provider.getBlock("latest");
+  const latestBlock = await ethers.provider.getBlock("latest");
   if (!latestBlock) throw new Error("cannot read the chain head");
   const { terms, signature } = await signSellerAcceptance({
     escrowAddress: context.escrowAddress,
-    provider: hre.ethers.provider,
+    provider: ethers.provider,
     sellerSigner: context.seller,
     buyer: context.buyerAddress,
     seller: context.sellerAddress,
